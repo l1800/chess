@@ -221,6 +221,7 @@ int runBoardCommands() {
                 if (auto airOpt = getAirborneAt(pm.toRow, pm.toCol, airborne)) {
                     const Airborne& air = *airOpt;
                     if (!sameColor(pm.piece, air.piece)) {
+                        board[pm.fromRow][pm.fromCol] = ".";
                         continue;
                     }
                     remaining.push_back(pm);
@@ -255,7 +256,19 @@ int runBoardCommands() {
         auto tok = splitWords(cmdLine);
         if (tok.empty()) continue;
 
-        if (tok[0] == "click" && tok.size() == 3) {
+        if (tok[0] == "jump" && tok.size() == 3) {
+            applyArrivedMoves(clockMs);
+            int x = stoi(tok[1]);
+            int y = stoi(tok[2]);
+            int col = x / 100;
+            int row = y / 100;
+            if (!inBoard(col, row)) continue;
+            const string& piece = board[row][col];
+            if (isPiece(piece) && !hasPendingMoveFrom(row, col, pending) && !isAirborneAt(row, col, airborne)) {
+                airborne.push_back(Airborne{row, col, piece, clockMs + JUMP_TIME});
+            }
+            selected.reset();
+        } else if (tok[0] == "click" && tok.size() == 3) {
             applyArrivedMoves(clockMs);
             int x = stoi(tok[1]);
             int y = stoi(tok[2]);
