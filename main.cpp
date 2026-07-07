@@ -2,9 +2,9 @@
 
 using namespace std;
 
-// Forward declaration of function from Board + pieces parsing.cpp
-int parseAndPrintBoard();
+// Forward declaration of function from Click mapping + controller selection.cpp
+int runBoardCommands();
 
 int main() {
-    return parseAndPrintBoard();
+    return runBoardCommands();
 }
